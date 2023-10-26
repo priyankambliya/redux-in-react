@@ -1,9 +1,12 @@
 //ALL PACKAGES:
 import { Request, Response } from "express"
+import * as bcrypt from 'bcrypt'
 //MODELS:
 import User from "../models/userSchema"
 //ROUTES IMPORTATION:
 import { successResponseHandler,errorResponseHandler } from "../handlers/responseHandlers"
+//SECURE DATA:
+import {SECURE_DATA} from '../security/config.json'
 
 //REGISTER USER:
 const createUser=async(request:Request,response:Response)=>{
@@ -13,11 +16,13 @@ const createUser=async(request:Request,response:Response)=>{
         password
     } = request.body
 
+    const hasedPassword = await bcrypt.hash(password,SECURE_DATA.ENCRYPT.PASSWORD_SALT)
+
     try {
         const userData = {
             name,
             email,
-            password
+            password:hasedPassword
         }
         await User.create(userData)
         successResponseHandler(response,{message:'user created'},201)

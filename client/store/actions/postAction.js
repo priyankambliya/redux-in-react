@@ -5,7 +5,7 @@ export const createUser = (user) => {
     const {name,email,password} = user
     return async (dispatch) => {
         try {
-            const {data} = await axios.post('http://localhost:3000/register',{
+            const {data} = await axios.post('http://localhost:3003/register',{
                 name,
                 email,
                 password
@@ -16,6 +16,7 @@ export const createUser = (user) => {
                     payload:data
                 })
             }
+
         } catch (error) {
             console.error(error,"error")
         }
