@@ -1,25 +1,31 @@
-import { useRef } from "react"
-import { createUser } from "../../store/actions/postAction"
+import { useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+import { updateUser } from "../../store/actions/postAction"
 import { useDispatch } from "react-redux"
-import {useNavigate} from 'react-router-dom'
 
-function AllUsers() {
+function UpdateUser() {
 
-  const nameRef = useRef()
-  const emailRef = useRef()
-  const passwordRef = useRef()
-
+  const location = useLocation()
+  const user = location.state.user
+  const [userObject, setUserObject] = useState(user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const handleAddEventListner = (e) => {
-    e.preventDefault()
-    const user = {
-      name: nameRef.current.value,
-      email: emailRef.current.value,
-      password: passwordRef.current.value,
-    }
-    dispatch(createUser(user))
+  const handleChange = (e) => {
+    const value = e.target.value
+    const name = e.target.name
+    setUserObject({
+      ...userObject,
+      [name]: value,
+    })
+  }
+
+  const handleUpdateAction = async () => {
+    // update the user in database here
+    dispatch(updateUser(user._id,{
+      name:userObject.name,
+      email:userObject.email
+    }))
     navigate('/users')
   }
 
@@ -33,8 +39,10 @@ function AllUsers() {
               Name
             </label>
             <input
-              type="email"
-              ref={nameRef}
+              type="name"
+              value={userObject.name}
+              name="name"
+              onChange={handleChange}
               className="form-control"
               id="exampleFormControlInput1"
             />
@@ -45,27 +53,18 @@ function AllUsers() {
             </label>
             <input
               type="email"
-              ref={emailRef}
-              className="form-control"
-              id="exampleFormControlInput1"
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="exampleFormControlInput1" className="form-label">
-              Password
-            </label>
-            <input
-              type="email"
-              ref={passwordRef}
+              value={userObject.email}
+              name="email"
+              onChange={handleChange}
               className="form-control"
               id="exampleFormControlInput1"
             />
           </div>
           <button
-            onClick={handleAddEventListner}
+            onClick={handleUpdateAction}
             className="btn btn-primary m-auto d-flex px-4 mt-4"
           >
-            Add
+            Update
           </button>
         </div>
       </div>
@@ -73,4 +72,4 @@ function AllUsers() {
   )
 }
 
-export default AllUsers
+export default UpdateUser

@@ -18,11 +18,6 @@ function App() {
                 </Route>
               </>
             ) 
-            // : auth == false ? (
-            //   <Route key={index} path={path} element={<RouteVerify />}>
-            //     <Route path={path} element={<Comp />} />
-            //   </Route>
-            // ) :
             : (
               <Route key={index} path={path} element={<Comp />} />
             )
